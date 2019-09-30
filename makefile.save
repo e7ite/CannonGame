@@ -1,0 +1,16 @@
+make: comp
+
+
+fin:
+	git executable
+comp:
+	g++ -c -g level.cpp cannon.cpp main.cpp
+
+delob:
+	rm -rf *.o
+
+run: make
+	./cannon.out
+
+debug: make
+	valgrind ./cannon
