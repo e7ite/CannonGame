@@ -1,8 +1,17 @@
-make: comp
-	g++ cannon.o main.o -o cannon -lsfml-graphics -lsfml-window -lsfml-system
+make: comp fin clean
+	
+
+clean:
+	rm -rf *.o	
+
+fin:
+	g++ level.o cannon.o main.o -o cannon.out -lsfml-graphics -lsfml-window -lsfml-system
 
 comp:
-	g++ -c cannon.cpp main.cpp
+	g++ -c -g level.cpp cannon.cpp main.cpp
 
 run: make
-	./cannon
+	./cannon.out
+
+debug: make
+	valgrind ./cannon
