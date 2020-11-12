@@ -1,8 +1,8 @@
-#include "cannon.h"
+#include "cannon.hpp"
 
 int main()
 {
-    //Load all resources 
+    // Load all resources 
     sf::Font font;
     sf::Texture bg;
     if (!font.loadFromFile("assets/Erewhon-Regular.otf")
@@ -14,10 +14,10 @@ int main()
     window.setFramerateLimit(60);
 
     //Setup background
-    Level *level = new Level(0.0f, -500.0f, 1280.0f, 615.0f, &bg);
+    Level level(bg, 0.0f, -500.0f, 1280.0f, 615.0f);
 
     //Setup cannon
-    Cannon *cannon = new Cannon(50.0f, 575.0f, 50.0f, 25.0f);
+    Cannon cannon(50.0f, 575.0f, 50.0f, 25.0f);
 
     //Begin SFML rendering procedure
     while(window.isOpen())
@@ -30,10 +30,6 @@ int main()
             {
                 case sf::Event::Closed:
                     window.close();
-                    delete cannon;
-                    cannon = nullptr;
-                    delete level;
-                    level = nullptr;
                     return 0;
             }   
         }
@@ -44,21 +40,29 @@ int main()
 
         //Update World
         float velocity;
-        if (level->GetVelocity(&velocity))
+        if (level.GetVelocity(&velocity))
         {
-            cannon->InitProjectile(velocity);
-            level->InitPositionStats(font);
+            cannon.InitProjectile(velocity);
+            level.InitPositionStats(font);
         }
-        if (cannon->projectile)
+        if (CannonBall *projectile = cannon.projectile.get())
         {
-            cannon->projectile->UpdateTrajectory(level, cannon);
-            level->UpdatePositionStats(cannon->projectile);
+            if (projectile->UpdateTrajectory(level, cannon))
+            {
+                cannon.DestroyProjectile();
+                level.DestroyPositionStats();
+                level.DestroyVelocityBar();
+            }
+            else
+            {
+                level.UpdatePositionStats(projectile);
+            }
         }
 
         //Draw Screen
         window.clear();
-        level->Render(&window);
-        cannon->Render(&window);
+        level.Render(window);
+        cannon.Render(window);
         window.display();
     }
 
