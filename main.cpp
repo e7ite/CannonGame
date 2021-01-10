@@ -9,17 +9,17 @@ int main()
         || !bg.loadFromFile("assets/background.png"))
         return 1;
 
-    //Setup window
+    // Setup window
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Cannon Game");
     window.setFramerateLimit(60);
 
-    //Setup background
+    // Setup background
     Level level(bg, 0.0f, -500.0f, 1280.0f, 615.0f);
 
-    //Setup cannon
+    // Setup cannon
     Cannon cannon(50.0f, 575.0f, 50.0f, 25.0f);
 
-    //Begin SFML rendering procedure
+    // Begin SFML rendering procedure
     while(window.isOpen())
     {
         //Poll window
@@ -31,23 +31,29 @@ int main()
                 case sf::Event::Closed:
                     window.close();
                     return 0;
+                default:
+                    break;
             }   
         }
 
-        //Monitor Keys
+        // Monitor Keys
         if (window.hasFocus())
             HandleControls(level, cannon);
 
-        //Update World
+        // Update World
         float velocity;
         if (level.GetVelocity(&velocity))
         {
             cannon.InitProjectile(velocity);
             level.InitPositionStats(font);
         }
+
+        // If projectile is spawned, update the trajectory and output position stats
         if (CannonBall *projectile = cannon.projectile.get())
         {
-            if (projectile->UpdateTrajectory(level, cannon))
+            // If the projectile has collided, destroy all of its resources
+            // else show and update the position stats
+            if (projectile->UpdateTrajectory(level))
             {
                 cannon.DestroyProjectile();
                 level.DestroyPositionStats();

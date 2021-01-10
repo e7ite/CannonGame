@@ -58,7 +58,7 @@ void Level::DestroyVelocityBar()
         delete borderPtr;
     if (auto *progressPtr = this->velProgress.release())
         delete progressPtr;
-    this->velBarState ^- this->velBarState;
+    this->velBarState = DEAD;
 }
 
 void Level::InitPositionStats(const sf::Font &font)
@@ -78,8 +78,7 @@ void Level::InitPositionStats(const sf::Font &font)
 void Level::DestroyPositionStats()
 {
     for (auto &i : this->statText) 
-        if (sf::Text *textStat = i.release())
-            delete textStat;
+        delete i.release();
 }
 
 void Level::ChangeVelocityBarState()

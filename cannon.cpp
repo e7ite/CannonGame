@@ -25,12 +25,8 @@ void Cannon::InitProjectile(float velocity)
 
 void Cannon::DestroyProjectile()
 {
-    if (this->projectile) 
-    {
-        CannonBall *projectile = this->projectile.release();
-        if (projectile)
-            delete projectile;
-    }
+    CannonBall *projectile = this->projectile.release();
+    delete projectile;
 }
 
 void Cannon::Render(sf::RenderWindow &window)
@@ -61,7 +57,7 @@ CannonBall::CannonBall(const Cannon &cannon, float velocity)
     this->shotPosition = this->shape.getPosition();
 }
 
-bool CannonBall::UpdateTrajectory(Level &level, Cannon &cannon)
+bool CannonBall::UpdateTrajectory(Level &level)
 {
     //Position equation = X(t) = 0.5at^2 + Vit + Xi
     float seconds = this->airTime.getElapsedTime().asSeconds() * 4.0f;

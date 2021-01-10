@@ -17,7 +17,7 @@ struct Cannon
     sf::RectangleShape launcher;
 
     Cannon(float x = 0.0f, float y = 0.0f) 
-        : x(x), y(y), launcher(launcher) {}
+        : x(x), y(y), wheel(sf::CircleShape()), launcher(sf::RectangleShape()) {}
     Cannon(float x, float y, float width, float height);
     ~Cannon();
 
@@ -70,7 +70,7 @@ struct CannonBall
      * @param cannon The cannon where the ball was shot from
      * @return If the projectile collides, return true. else return false
      */
-    bool UpdateTrajectory(Level &level, Cannon &cannon);
+    bool UpdateTrajectory(Level &level);
 };
 
 /**
